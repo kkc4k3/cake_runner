@@ -2,6 +2,8 @@ const chokidar = require("chokidar")
 const path = require("path")
 const sass = require("sass")
 const fs = require("fs").promises
+const postcss = require("postcss")
+const autoprefixer = require("autoprefixer")
 
 const srcDir = "./src"
 const distDir = "./dist"
@@ -29,16 +31,16 @@ const watcher = chokidar.watch(globList, {
 // ファイル追加
 watcher.on("add", async (pathName) => {
     if (getExt(pathName) === ".scss") {
-        await compileScss()
-        console.log("done")
+        const cssPromise = await compileScss()
+        console.log(cssPromise)
     }
 })
 
 // ファイル変更
 watcher.on("change", async (pathName) => {
     if (getExt(pathName) === ".scss") {
-        await compileScss()
-        console.log("done")
+        const cssPromise = await compileScss()
+        console.log(cssPromise)
     }
 })
 
@@ -58,10 +60,26 @@ async function compileScss(
     outputFile = "style.css"
 ) {
     try {
+        // scssからcssにコンパイル
         const result = sass.renderSync({
             file: source,
         })
-        await fs.writeFile(dist + "/" + outputFile, result.css)
+        // ↑にベンダープレフィックスつける
+        const prefixCss = await postcss([
+            autoprefixer({
+                overrideBrowserslist: [
+                    "last 2 versions",
+                    "ie >= 11",
+                    "Android >= 4",
+                ],
+                cascade: false,
+            }),
+        ]).process(result.css, {
+            from: undefined,
+        })
+        // 出力
+        await fs.writeFile(dist + "/" + outputFile, prefixCss.css)
+        // 文字列メッセージとしてpromise返却
         return "css compiled"
     } catch (error) {
         console.error(error.message)
