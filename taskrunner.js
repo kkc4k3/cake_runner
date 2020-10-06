@@ -1,7 +1,10 @@
-const chokidar = require("chokidar")
+// nodeの
 const path = require("path")
-const sass = require("sass")
 const fs = require("fs").promises
+
+// 外部ライブラリ
+const chokidar = require("chokidar")
+const sass = require("sass")
 const postcss = require("postcss")
 const autoprefixer = require("autoprefixer")
 const cssnano = require("cssnano")
@@ -11,20 +14,7 @@ const distDir = "./dist"
 // src以下の監視対象ファイルを配列で指定
 const assetsDir = ["scss", "js", "img"]
 
-// 以下で生成するglobがこの中に入る
-var globList = []
-
-// globを生成 多分10個下のファイルまで見る（流石にそんな深い階層にはせんやろ……）
-// TODO: ディレクトリが追加されたら監視対象に追加みたいな処理に出来る？
-for (i = 0; i < 10; i++) {
-    const globStr = "/**"
-    assetsDir.forEach((dir) => {
-        const dirGlobStr = srcDir + "/" + dir + globStr.repeat(i)
-        globList.push(dirGlobStr)
-    })
-}
-
-const watcher = chokidar.watch(globList, {
+const watcher = chokidar.watch(srcDir + "/**", {
     ignored: /(^|[\/\\])\../, // ignore dotfiles
     persistent: true,
 })
@@ -87,6 +77,7 @@ async function compileScss(
         // 出力
         await fs.writeFile(dist + "/" + outputFile, prefixCss.css)
         await fs.writeFile(dist + "/" + outputMinFile, minCss.css)
+
         // 文字列メッセージとしてpromise返却
         return "css compiled"
     } catch (error) {
