@@ -4,6 +4,7 @@ const sass = require("sass")
 const fs = require("fs").promises
 const postcss = require("postcss")
 const autoprefixer = require("autoprefixer")
+const cssnano = require("cssnano")
 
 const srcDir = "./src"
 const distDir = "./dist"
@@ -57,7 +58,8 @@ function getExt(pathName) {
 async function compileScss(
     source = srcDir + "/scss/style.scss",
     dist = distDir + "/css",
-    outputFile = "style.css"
+    outputFile = "style.css",
+    outputMinFile = "style.min.css"
 ) {
     try {
         // scssからcssにコンパイル
@@ -77,8 +79,14 @@ async function compileScss(
         ]).process(result.css, {
             from: undefined,
         })
+        // minify化
+        const minCss = await postcss([cssnano]).process(prefixCss.css, {
+            from: undefined,
+        })
+
         // 出力
         await fs.writeFile(dist + "/" + outputFile, prefixCss.css)
+        await fs.writeFile(dist + "/" + outputMinFile, minCss.css)
         // 文字列メッセージとしてpromise返却
         return "css compiled"
     } catch (error) {
