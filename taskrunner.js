@@ -27,18 +27,24 @@ const watcher = chokidar.watch(globList, {
 })
 
 // ファイル追加
-watcher.on("add", (pathName) => {
+watcher.on("add", async (pathName) => {
     if (getExt(pathName) === ".scss") {
-        compileScss(pathName)
+        await compileScss()
+        console.log("done")
     }
 })
 
 // ファイル変更
-watcher.on("change", (pathName) => {
+watcher.on("change", async (pathName) => {
     if (getExt(pathName) === ".scss") {
-        compileScss(pathName)
+        await compileScss()
+        console.log("done")
     }
 })
+
+// ===========================================
+// 関数
+// ===========================================
 
 // 拡張子を取得して返す
 function getExt(pathName) {
@@ -46,27 +52,18 @@ function getExt(pathName) {
 }
 
 // scssのコンパイル
-function compileScss(
-    source,
+async function compileScss(
+    source = srcDir + "/scss/style.scss",
     dist = distDir + "/css",
     outputFile = "style.css"
 ) {
-    sass.render(
-        {
+    try {
+        const result = sass.renderSync({
             file: source,
-        },
-        (error, result) => {
-            if (error) {
-                console.log(error.message)
-            } else {
-                fs.writeFile(dist + "/" + outputFile, result.css)
-                    .then((res) => {
-                        //
-                    })
-                    .catch((err) => {
-                        console.error(err.message)
-                    })
-            }
-        }
-    )
+        })
+        await fs.writeFile(dist + "/" + outputFile, result.css)
+        return "css compiled"
+    } catch (error) {
+        console.error(error.message)
+    }
 }
