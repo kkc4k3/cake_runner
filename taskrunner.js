@@ -8,11 +8,10 @@ const sass = require("sass")
 const postcss = require("postcss")
 const autoprefixer = require("autoprefixer")
 const cssnano = require("cssnano")
+const { build } = require("esbuild")
 
 const srcDir = "./src"
 const distDir = "./dist"
-// src以下の監視対象ファイルを配列で指定
-const assetsDir = ["scss", "js", "img"]
 
 const watcher = chokidar.watch(srcDir + "/**", {
     ignored: /(^|[\/\\])\../, // ignore dotfiles
@@ -21,9 +20,15 @@ const watcher = chokidar.watch(srcDir + "/**", {
 
 // ファイル追加
 watcher.on("add", async (pathName) => {
+    // css
     if (getExt(pathName) === ".scss") {
         const cssPromise = await compileScss()
         console.log(cssPromise)
+    }
+    // js
+    if (getExt(pathName) === ".js") {
+        const jsPromise = await buildJs()
+        console.log(jsPromise)
     }
 })
 
@@ -32,6 +37,11 @@ watcher.on("change", async (pathName) => {
     if (getExt(pathName) === ".scss") {
         const cssPromise = await compileScss()
         console.log(cssPromise)
+    }
+    // js
+    if (getExt(pathName) === ".js") {
+        const jsPromise = await buildJs()
+        console.log(jsPromise)
     }
 })
 
@@ -80,6 +90,24 @@ async function compileScss(
 
         // 文字列メッセージとしてpromise返却
         return "css compiled"
+    } catch (error) {
+        console.error(error.message)
+    }
+}
+
+// jsのビルドとか
+async function buildJs(
+    entry = srcDir + "/js/index.js",
+    output = distDir + "/js/main.js"
+) {
+    try {
+        await build({
+            entryPoints: [entry],
+            outfile: output,
+            minify: true,
+            bundle: true,
+        })
+        return "js builded"
     } catch (error) {
         console.error(error.message)
     }
