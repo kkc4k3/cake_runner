@@ -5,11 +5,12 @@
     "author": "kiri",
     "license": "MIT",
     "scripts": {
-        "dev": "node taskdunner.js"
+        "dev": "node taskrunner.js"
     },
     "dependencies": {
         "chokidar": "^3.4.2",
         "esbuild": "^0.7.9",
+        "node-sass": "^4.14.1",
         "sass": "^1.26.12"
     }
 }
