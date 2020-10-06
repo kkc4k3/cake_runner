@@ -1,0 +1,15 @@
+{
+    "name": "verdy_code",
+    "version": "1.0.0",
+    "main": "index.js",
+    "author": "kiri",
+    "license": "MIT",
+    "scripts": {
+        "dev": "node taskdunner.js"
+    },
+    "dependencies": {
+        "chokidar": "^3.4.2",
+        "esbuild": "^0.7.9",
+        "sass": "^1.26.12"
+    }
+}
