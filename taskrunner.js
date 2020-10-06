@@ -9,6 +9,7 @@ const postcss = require("postcss")
 const autoprefixer = require("autoprefixer")
 const cssnano = require("cssnano")
 const { build } = require("esbuild")
+const babel = require("@babel/core")
 
 const srcDir = "./src"
 const distDir = "./dist"
