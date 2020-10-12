@@ -5,7 +5,7 @@
     "author": "kkcake",
     "license": "MIT",
     "bin": {
-        "cakerun": "app.js"
+        "cakerun": "cli.js"
     },
     "scripts": {
         "init": "mkdir src&&mkdir dist",
