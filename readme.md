@@ -14,7 +14,7 @@
 // 値はすべて初期値（のはず）
 module.exports = {
     srcDir: "./src", // 作業フォルダ
-    distDir: "/dist", // 出力フォルダ
+    distDir: "./dist", // 出力フォルダ
     // css（基本scss前提で書いています）
     scss: {
         src: "./scss", // ベースになるscssファイルのあるフォルダ（src直下の場合は空文字）
