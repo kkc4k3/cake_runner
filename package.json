@@ -26,7 +26,9 @@
         "lodash.merge": "^4.6.2",
         "node-sass": "^4.14.1",
         "postcss": "^8.1.1",
-        "sass": "^1.26.12",
+        "sass": "^1.26.12"
+    },
+    "devDependencies": {
         "vue": "^2.6.12"
     }
 }
