@@ -18,6 +18,8 @@
         "chokidar": "^3.4.2",
         "cssnano": "^4.1.10",
         "esbuild": "^0.7.9",
+        "imagemin": "^7.0.1",
+        "lodash.merge": "^4.6.2",
         "node-sass": "^4.14.1",
         "postcss": "^8.1.1",
         "sass": "^1.26.12",
